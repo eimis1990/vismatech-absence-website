@@ -11,7 +11,10 @@ export const metadata: Metadata = {
     description:
       "Register absence reasons, dates, and submissions from a compact Chrome extension.",
     type: "website"
-  }
+  },
+  verification: {
+    google: "09323wLa6_3cpj-ivasAIdVvlTNUtLtRlh83Jje1aq4",
+  },
 };
 
 export default function RootLayout({
