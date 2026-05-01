@@ -48,75 +48,71 @@ export default function FeaturesSection() {
         if (!section) return;
 
         const content = section.querySelector(".feature-content");
-        const imageWrapper = section.querySelector(".feature-image-wrapper");
+        const card = section.querySelector(".feature-card");
         const isReversed = index % 2 === 1;
 
         // Content animation
         gsap.fromTo(
           content,
           {
-            y: 80,
+            x: isReversed ? 60 : -60,
             opacity: 0,
           },
           {
-            y: 0,
+            x: 0,
             opacity: 1,
             duration: 1,
             ease: "power3.out",
             scrollTrigger: {
               trigger: section,
-              start: "top 80%",
-              end: "center 50%",
+              start: "top 75%",
+              end: "top 25%",
               scrub: 1,
             },
           }
         );
 
-        // Image reveal animation with clip-path
+        // Card animation - slide in from opposite side
         gsap.fromTo(
-          imageWrapper,
+          card,
           {
-            clipPath: isReversed
-              ? "inset(0 0 0 100%)"
-              : "inset(0 100% 0 0)",
+            x: isReversed ? -80 : 80,
             opacity: 0,
+            scale: 0.95,
           },
           {
-            clipPath: "inset(0 0% 0 0)",
+            x: 0,
             opacity: 1,
+            scale: 1,
             duration: 1.2,
             ease: "power3.out",
             scrollTrigger: {
               trigger: section,
               start: "top 75%",
-              end: "center 40%",
+              end: "top 25%",
               scrub: 1,
             },
           }
         );
 
-        // Parallax effect on image
-        gsap.fromTo(
-          imageWrapper,
-          { y: 60 },
-          {
-            y: -60,
-            ease: "none",
-            scrollTrigger: {
-              trigger: section,
-              start: "top bottom",
-              end: "bottom top",
-              scrub: true,
-            },
-          }
-        );
+        // Parallax effect on card (separate ScrollTrigger)
+        gsap.to(card, {
+          y: -40,
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          },
+        });
       });
     },
     { scope: containerRef }
   );
 
   return (
-    <section ref={containerRef} className="relative py-20 lg:py-32">
+    <section ref={containerRef} className="relative py-20 lg:py-32 overflow-hidden">
       {/* Section Header */}
       <div className="mx-auto max-w-7xl px-6 mb-20 lg:mb-32">
         <div className="text-center">
@@ -126,7 +122,7 @@ export default function FeaturesSection() {
           <h2 className="mt-6 text-4xl font-black leading-[1.1] text-ink sm:text-5xl lg:text-6xl">
             Everything you need,
             <br />
-            <span className="text-lime-500">nothing you don't.</span>
+            <span className="text-lime-500">nothing you don&apos;t.</span>
           </h2>
         </div>
       </div>
@@ -177,33 +173,39 @@ export default function FeaturesSection() {
                   </div>
 
                   {/* Image - Chrome Extension Frame */}
-                  <div className="feature-image-wrapper w-full lg:w-1/2">
+                  <div className="feature-card w-full lg:w-1/2">
                     <div className="relative">
-                      {/* Glow Effect */}
+                      {/* Outer Glow - Large soft shadow */}
                       <div
-                        className={`absolute -inset-4 rounded-[32px] blur-[60px] opacity-40 ${
+                        className={`absolute -inset-8 rounded-[48px] opacity-50 blur-3xl ${
                           feature.accent === "violet"
-                            ? "bg-violet-500/30"
-                            : "bg-lime/40"
+                            ? "bg-violet-400/40"
+                            : "bg-lime/50"
                         }`}
                       />
 
                       {/* Browser Chrome Frame */}
-                      <div className="relative overflow-hidden rounded-2xl bg-white shadow-[0_40px_100px_rgba(20,22,26,0.15)] ring-1 ring-ink/10">
+                      <div
+                        className={`relative rounded-3xl bg-cloud/80 p-3 backdrop-blur-sm ${
+                          feature.accent === "violet"
+                            ? "shadow-[0_8px_40px_rgba(108,99,255,0.15),0_20px_80px_rgba(108,99,255,0.1),0_0_0_1px_rgba(108,99,255,0.05)]"
+                            : "shadow-[0_8px_40px_rgba(187,241,70,0.2),0_20px_80px_rgba(187,241,70,0.15),0_0_0_1px_rgba(187,241,70,0.1)]"
+                        }`}
+                      >
                         {/* Browser Top Bar */}
-                        <div className="flex items-center gap-2 border-b border-ink/5 bg-cloud/80 px-4 py-3">
+                        <div className="flex items-center gap-2 rounded-t-xl bg-cloud px-4 py-3">
                           {/* Traffic Lights */}
                           <div className="flex gap-1.5">
-                            <div className="h-3 w-3 rounded-full bg-red-400" />
-                            <div className="h-3 w-3 rounded-full bg-yellow-400" />
-                            <div className="h-3 w-3 rounded-full bg-green-400" />
+                            <div className="h-3 w-3 rounded-full bg-[#ff5f57]" />
+                            <div className="h-3 w-3 rounded-full bg-[#febc2e]" />
+                            <div className="h-3 w-3 rounded-full bg-[#28c840]" />
                           </div>
 
                           {/* URL Bar */}
                           <div className="ml-4 flex-1">
-                            <div className="flex h-7 items-center gap-2 rounded-lg bg-white px-3 text-xs text-ink/40 ring-1 ring-ink/10">
+                            <div className="flex h-7 items-center gap-2 rounded-lg bg-white px-3 text-xs text-ink/40 shadow-sm ring-1 ring-ink/5">
                               <svg
-                                className="h-3 w-3"
+                                className="h-3 w-3 flex-shrink-0"
                                 fill="none"
                                 viewBox="0 0 24 24"
                                 stroke="currentColor"
@@ -250,7 +252,7 @@ export default function FeaturesSection() {
                         </div>
 
                         {/* Extension Screenshot */}
-                        <div className="relative aspect-[4/3] w-full overflow-hidden bg-cloud">
+                        <div className="relative aspect-[4/3] w-full overflow-hidden rounded-b-xl bg-cloud">
                           <Image
                             src={feature.image}
                             alt={feature.tag}
@@ -261,12 +263,12 @@ export default function FeaturesSection() {
                         </div>
                       </div>
 
-                      {/* Decorative Elements */}
+                      {/* Decorative corner glow */}
                       <div
-                        className={`absolute -bottom-4 -right-4 h-24 w-24 rounded-full blur-2xl opacity-60 ${
+                        className={`absolute -bottom-6 -right-6 h-32 w-32 rounded-full blur-2xl opacity-70 ${
                           feature.accent === "violet"
-                            ? "bg-violet-400"
-                            : "bg-lime"
+                            ? "bg-violet-400/50"
+                            : "bg-lime/60"
                         }`}
                       />
                     </div>
